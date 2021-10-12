@@ -41,7 +41,7 @@ const deserialize = str => {
 };
 
 const post = (path, body) => {
-  const url = `${apiBaseUrl()}${path}`;
+  const url = `${apiBaseUrl().trim()}${path}`;
   const options = {
     method: 'POST',
     credentials: 'include',
