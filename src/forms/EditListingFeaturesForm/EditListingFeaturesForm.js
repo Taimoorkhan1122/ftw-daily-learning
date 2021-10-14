@@ -7,7 +7,7 @@ import { FormattedMessage } from '../../util/reactIntl';
 import { findOptionsForSelectFilter } from '../../util/search';
 import { propTypes } from '../../util/types';
 import config from '../../config';
-import { Button, FieldCheckboxGroup, Form } from '../../components';
+import { Button, FieldCheckboxGroup, Form, FieldSelect, FieldCheckbox } from '../../components';
 
 import css from './EditListingFeaturesForm.module.css';
 
@@ -16,59 +16,104 @@ const EditListingFeaturesFormComponent = props => (
     {...props}
     mutators={{ ...arrayMutators }}
     render={formRenderProps => {
-      const {
-        disabled,
-        ready,
-        rootClassName,
-        className,
-        name,
-        handleSubmit,
-        pristine,
-        saveActionMsg,
-        updated,
-        updateInProgress,
-        fetchErrors,
-        filterConfig,
-      } = formRenderProps;
+                                 const {
+                                   disabled,
+                                   ready,
+                                   rootClassName,
+                                   className,
+                                   name,
+                                   handleSubmit,
+                                   pristine,
+                                   saveActionMsg,
+                                   updated,
+                                   updateInProgress,
+                                   fetchErrors,
+                                   filterConfig,
+                                 } = formRenderProps;
 
-      const classes = classNames(rootClassName || css.root, className);
-      const submitReady = (updated && pristine) || ready;
-      const submitInProgress = updateInProgress;
-      const submitDisabled = disabled || submitInProgress;
+                                 const classes = classNames(rootClassName || css.root, className);
+                                 const submitReady = (updated && pristine) || ready;
+                                 const submitInProgress = updateInProgress;
+                                 const submitDisabled = disabled || submitInProgress;
 
-      const { updateListingError, showListingsError } = fetchErrors || {};
-      const errorMessage = updateListingError ? (
-        <p className={css.error}>
-          <FormattedMessage id="EditListingFeaturesForm.updateFailed" />
-        </p>
-      ) : null;
+                                 const { updateListingError, showListingsError } =
+                                   fetchErrors || {};
+                                 const errorMessage = updateListingError ? (
+                                   <p className={css.error}>
+                                     <FormattedMessage id="EditListingFeaturesForm.updateFailed" />
+                                   </p>
+                                 ) : null;
 
-      const errorMessageShowListing = showListingsError ? (
-        <p className={css.error}>
-          <FormattedMessage id="EditListingFeaturesForm.showListingFailed" />
-        </p>
-      ) : null;
+                                 const errorMessageShowListing = showListingsError ? (
+                                   <p className={css.error}>
+                                     <FormattedMessage id="EditListingFeaturesForm.showListingFailed" />
+                                   </p>
+                                 ) : null;
 
-      const options = findOptionsForSelectFilter('amenities', filterConfig);
-      return (
-        <Form className={classes} onSubmit={handleSubmit}>
-          {errorMessage}
-          {errorMessageShowListing}
+                                 const options = findOptionsForSelectFilter(
+                                   'amenities',
+                                   filterConfig
+                                 );
 
-          <FieldCheckboxGroup className={css.features} id={name} name={name} options={options} />
 
-          <Button
-            className={css.submitButton}
-            type="submit"
-            inProgress={submitInProgress}
-            disabled={submitDisabled}
-            ready={submitReady}
-          >
-            {saveActionMsg}
-          </Button>
-        </Form>
-      );
-    }}
+                                 // Props for "view" select field
+                                 const viewKey = 'view';
+                                 const viewOptions = findOptionsForSelectFilter(
+                                   viewKey,
+                                   filterConfig
+                                 );
+
+                                 const nigthOptions = findOptionsForSelectFilter(
+                                   'nightStay',
+                                   filterConfig
+                                 )
+                                 
+                                 return (
+                                   <Form className={classes} onSubmit={handleSubmit}>
+                                     {errorMessage}
+                                     {errorMessageShowListing}
+
+                                     <FieldCheckboxGroup
+                                       className={css.features}
+                                       id={name}
+                                       name={name}
+                                       options={options}
+                                       label="features"
+                                     />
+
+                                     <FieldSelect
+                                       className={css.features}
+                                       name={viewKey}
+                                       id={viewKey}
+                                       label={'Location type'}
+                                     >
+                                       {viewOptions.map(o => (
+                                         <option key={o.key} value={o.key}>
+                                           {o.label}
+                                         </option>
+                                       ))}
+                                     </FieldSelect>
+
+                                     <FieldCheckbox
+                                       className={css.features}
+                                       id={'nightStay'}
+                                       name={'nightStay'}
+                                       options={nigthOptions}
+                                       label="Night Stay"
+                                     />
+
+                                     <Button
+                                       className={css.submitButton}
+                                       type="submit"
+                                       inProgress={submitInProgress}
+                                       disabled={submitDisabled}
+                                       ready={submitReady}
+                                     >
+                                       {saveActionMsg}
+                                     </Button>
+                                   </Form>
+                                 );
+                               }}
   />
 );
 

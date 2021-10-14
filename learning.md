@@ -31,3 +31,13 @@ StaticPage component can take 2 props that help with this search engine optimiza
 The second property (schema) takes in JSON-LD type of content. Here, we state that this page is actually of type "FAQPage" in the context of schema.org vocabulary and we also add name and description for it.
 
 In addition, we could actually describe all the questions and answers to search engines too. This can be done through mainEntity key.
+
+
+## Add extended data to listing entity
+### Learn how to add marketplace specific data to the listing entity by using extended data.
+
+For adding new data first we have to configure editListingFeaturesPanel In that file, EditListingFeaturesForm gets its props and we can modify what gets saved to publicData attribute of the listing entity. We'll add "view" key there with an empty string. whatever fields we want to be added in Features tab will be first loaded here. from there we can set public data to newly populated fields.
+
+We also need to get the saved value and pass it as the initial value for EditListingFeaturesForm, when it gets rendered.
+
+Then add form inputs for relevant fields
