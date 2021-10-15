@@ -41,3 +41,9 @@ For adding new data first we have to configure editListingFeaturesPanel In that 
 We also need to get the saved value and pass it as the initial value for EditListingFeaturesForm, when it gets rendered.
 
 Then add form inputs for relevant fields
+
+
+## Show extended data on listing page
+### Learn how to show extended data on the listing page using the public data key.
+
+To add a view info to the ListingPage component we need to modify `ListingPage.js` and we also add a new subcomponent to that directory: `SectionViewMaybe.js`.
