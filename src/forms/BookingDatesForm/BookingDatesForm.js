@@ -20,7 +20,6 @@ import EstimatedBreakdownMaybe from './EstimatedBreakdownMaybe';
 import { formatMoney } from '../../util/currency';
 import { types as sdkTypes } from '../../util/sdkLoader';
 
-
 import css from './BookingDatesForm.module.css';
 
 const identity = v => v;
@@ -64,15 +63,18 @@ export class BookingDatesFormComponent extends Component {
   handleOnChange(formValues) {
     const { startDate, endDate } =
       formValues.values && formValues.values.bookingDates ? formValues.values.bookingDates : {};
-      const hasCleaningFee =
+    const hasCleaningFee =
       formValues.values.cleaningFee && formValues.values.cleaningFee.length > 0;
+   
+    const hasWifiCharges =
+      formValues.values.wifiCharges && formValues.values.wifiCharges.length > 0;
 
-      const listingId = this.props.listingId;
+    const listingId = this.props.listingId;
     const isOwnListing = this.props.isOwnListing;
 
     if (startDate && endDate && !this.props.fetchLineItemsInProgress) {
       this.props.onFetchTransactionLineItems({
-        bookingData: { startDate, endDate, hasCleaningFee },
+        bookingData: { startDate, endDate, hasCleaningFee, hasWifiCharges },
         listingId,
         isOwnListing,
       });
@@ -124,6 +126,7 @@ export class BookingDatesFormComponent extends Component {
             fetchLineItemsInProgress,
             fetchLineItemsError,
             cleaningFee,
+            wifiCharges,
           } = fieldRenderProps;
 
           // Formatted cleaning fee
@@ -134,6 +137,16 @@ export class BookingDatesFormComponent extends Component {
           const cleaningFeeLabel = intl.formatMessage(
             { id: 'BookingDatesForm.cleaningFeeLabel' },
             { fee: formattedCleaningFee }
+          );
+
+          // wifi charges
+          const formattedWifiCharges = wifiCharges
+            ? formatMoney(intl, new Money(wifiCharges.amount, wifiCharges.currency))
+            : null;
+          // wifi charges label
+          const wifiChargesLabel = intl.formatMessage(
+            { id: 'BookingDatesForm.wifiChargesLabel' },
+            { charges: formattedWifiCharges }
           );
 
           const { startDate, endDate } = values && values.bookingDates ? values.bookingDates : {};
@@ -204,6 +217,15 @@ export class BookingDatesFormComponent extends Component {
             />
           ) : null;
 
+          const wifiChargesMaybe = wifiCharges ? (
+            <FieldCheckbox
+              id="wifiCharges"
+              name="wifiCharges"
+              label={wifiChargesLabel}
+              value="charges"
+            />
+          ) : null;
+
           const dateFormatOptions = {
             weekday: 'short',
             month: 'short',
@@ -255,6 +277,7 @@ export class BookingDatesFormComponent extends Component {
                 disabled={fetchLineItemsInProgress}
               />
               {cleaningFeeMaybe}
+              {wifiChargesMaybe}
               {bookingInfoMaybe}
               {loadingSpinnerMaybe}
               {bookingInfoErrorMaybe}

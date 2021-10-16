@@ -26,7 +26,7 @@ Route configuration are defined in a file `routeConfiguration.js`
 
 
 ## Page Schema 
-StaticPage component can take 2 props that help with this search engine optimization (SEO). Title is pretty self-explanatory: it's used to overwrite the default <title> tag in the <head> section of the generated HTML page.
+StaticPage component can take 2 props that help with this search engine optimization (SEO). Title is pretty self-explanatory: it's used to overwrite the default `<title>` tag in the `<head>` section of the generated HTML page.
 
 The second property (schema) takes in JSON-LD type of content. Here, we state that this page is actually of type "FAQPage" in the context of schema.org vocabulary and we also add name and description for it.
 
@@ -49,3 +49,12 @@ Then add form inputs for relevant fields
 To add a view info to the ListingPage component we need to modify `ListingPage.js` and we also add a new subcomponent to that directory: `SectionViewMaybe.js`.
 
 ## Customize pricing
+1. In  `EditListingPricingPanel` add your new price field to the publicData field form onSubmit handler
+2. Next pass initial values  for price and new pricing fields as currency.
+3. Add Input component to the pricing form + add translation keys for the input component.
+4. Next we have to update the bookingDatesForm
+    - The `BookingPanel` gets listing as props, newly populated data is saved to listing's public data key. We can get the new pricing data and pass it as props to  `BookingDatesForm`.
+5. Next we will add wifi charges checkbox to the booking form.
+6. Next we update the booking data, i.e. if user has booking data and selected other values and update the transaction line items. These line items are shown inside the `bookingInfoMaybe` component under the form fields. 
+7. Inside BookingPanel on handleChange check if new values is available to formValues field. if yes then set bookingData with this key.
+8. Add new line item for the newly populated item on backend. When we want to add a new line item for new pricing item, we'll need to update the pricing logic in the lineItems.js file.

@@ -47,7 +47,12 @@ const EditListingPricingPanel = props => {
     ? new Money(cleaningFee.amount, cleaningFee.currency)
     : null;
 
-  const initialValues = {price, cleaningFee: cleaningFeeAsMoney}
+  const wifiCharges = publicData && publicData.wifiCharges ? publicData.wifiCharges : null;
+  const wifiChargesAsMoney = wifiCharges
+    ? new Money(wifiCharges.amount, wifiCharges.currency)
+    : null;
+
+  const initialValues = { price, cleaningFee: cleaningFeeAsMoney, wifiCharges: wifiChargesAsMoney };
 
   const priceCurrencyValid = price instanceof Money ? price.currency === config.currency : true;
   const form = priceCurrencyValid ? (
@@ -55,11 +60,12 @@ const EditListingPricingPanel = props => {
       className={css.form}
       initialValues={initialValues}
       onSubmit={values => {
-        const { price, cleaningFee = null } = values;
+        const { price, cleaningFee = null, wifiCharges = null } = values;
         const updatedValues = {
           price,
           publicData: {
             cleaningFee: { amount: cleaningFee.amount, currency: cleaningFee.currency },
+            wifiCharges: { amount: wifiCharges.amount, currency: wifiCharges.currency },
           },
         };
         onSubmit(updatedValues);

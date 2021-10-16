@@ -2,6 +2,7 @@ const {
   calculateQuantityFromDates,
   calculateTotalFromLineItems,
   resolveCleaningFeePrice,
+  resolveWifiCharges,
 } = require('./lineItemHelpers');
 const { types } = require('sharetribe-flex-sdk');
 const { Money } = types;
@@ -33,7 +34,7 @@ const PROVIDER_COMMISSION_PERCENTAGE = -10;
  */
 exports.transactionLineItems = (listing, bookingData) => {
   const unitPrice = listing.attributes.price;
-  const { startDate, endDate, hasCleaningFee } = bookingData;
+  const { startDate, endDate, hasCleaningFee, hasWifiCharges } = bookingData;
 
   /**
    * If you want to use pre-defined component and translations for printing the lineItems base price for booking,
@@ -64,14 +65,26 @@ exports.transactionLineItems = (listing, bookingData) => {
       ]
     : [];
 
+  const wifiChargesPrice = hasWifiCharges ? resolveWifiCharges(listing) : null;
+  const wifiCharges = wifiChargesPrice
+    ? [
+        {
+          code: 'line-item/wifi-charges',
+          unitPrice: wifiChargesPrice,
+          quantity: 1,
+          includeFor: ['customer', 'provider'],
+        },
+      ]
+    : [];
+
   const providerCommission = {
     code: 'line-item/provider-commission',
-    unitPrice: calculateTotalFromLineItems([booking, ...cleaningFee]),
+    unitPrice: calculateTotalFromLineItems([booking, ...cleaningFee, ...wifiCharges]),
     percentage: PROVIDER_COMMISSION_PERCENTAGE,
     includeFor: ['provider'],
   };
 
-  const lineItems = [booking,...cleaningFee ,providerCommission];
+  const lineItems = [booking, ...cleaningFee, ...wifiCharges, providerCommission];
 
   return lineItems;
 };

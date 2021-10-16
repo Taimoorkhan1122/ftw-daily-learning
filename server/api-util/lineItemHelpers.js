@@ -215,3 +215,14 @@ exports.resolveCleaningFeePrice = listing => {
 
   return null;
 };
+
+exports.resolveWifiCharges = listing => {
+  const publicData = listing.attributes.publicData;
+  const wifiCharges = publicData && publicData.wifiCharges;
+  const { amount, currency } = wifiCharges;
+  if (amount && currency) {
+    return new Money(amount, currency);
+  }
+
+  return null;
+};

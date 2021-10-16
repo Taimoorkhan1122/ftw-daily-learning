@@ -83,6 +83,11 @@ const BookingPanel = props => {
       ? listing.attributes.publicData.cleaningFee
       : null;
 
+  const wifiCharges =
+    listing.attributes.publicData && listing.attributes.publicData.wifiCharges
+      ? listing.attributes.publicData.wifiCharges
+      : null;
+
   const subTitleText = !!subTitle
     ? subTitle
     : showClosedListingHelpText
@@ -139,6 +144,7 @@ const BookingPanel = props => {
             fetchLineItemsInProgress={fetchLineItemsInProgress}
             fetchLineItemsError={fetchLineItemsError}
             cleaningFee={cleaningFee}
+            wifiCharges={wifiCharges}
           />
         ) : null}
       </ModalInMobile>

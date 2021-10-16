@@ -53,9 +53,15 @@ export const EditListingPricingFormComponent = props => (
       const cleaningFeeMessage = intl.formatMessage({
         id: 'EditListingPricingForm.cleaningFeeMessage',
       });
-
       const cleaningFeePlaceholderMessage = intl.formatMessage({
         id: 'EditListingPricingForm.cleaningFeePlaceholder',
+      });
+
+      const wifiChargesMessage = intl.formatMessage({
+        id: 'EditListingPricingForm.wifiChargesMessage',
+      });
+      const wifiChargesPlaceholderMessage = intl.formatMessage({
+        id: 'EditListingPricingForm.wifiChargesPlaceholderMessage',
       });
 
       const priceRequired = validators.required(
@@ -115,6 +121,16 @@ export const EditListingPricingFormComponent = props => (
             autoFocus
             label={cleaningFeeMessage}
             placeholder={cleaningFeePlaceholderMessage}
+            currencyConfig={config.currencyConfig}
+          />
+
+          <FieldCurrencyInput
+            id="wifiCharges"
+            name="wifiCharges"
+            className={classNames(css.cleaningFeeInput, css.priceInput)}
+            autoFocus
+            label={wifiChargesMessage}
+            placeholder={wifiChargesPlaceholderMessage}
             currencyConfig={config.currencyConfig}
           />
 
