@@ -47,3 +47,5 @@ Then add form inputs for relevant fields
 ### Learn how to show extended data on the listing page using the public data key.
 
 To add a view info to the ListingPage component we need to modify `ListingPage.js` and we also add a new subcomponent to that directory: `SectionViewMaybe.js`.
+
+## Customize pricing

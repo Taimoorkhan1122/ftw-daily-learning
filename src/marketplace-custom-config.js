@@ -159,7 +159,7 @@ export const filters = [
            queryParamNames: ['pub_nightStay'],
            config: {
              schemaType: 'boolean',
-             options: [{ key: "true", label: 'Yes' }, { key: "false", label: 'No' }],
+             options: [{ key: true, label: 'Yes' }, { key: false, label: 'No' }],
            },
          },
        ];

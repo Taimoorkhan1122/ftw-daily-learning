@@ -53,6 +53,7 @@ import SectionRulesMaybe from './SectionRulesMaybe';
 import SectionMapMaybe from './SectionMapMaybe';
 import SectionViewMaybe from './SectionViewMaybe';
 import css from './ListingPage.module.css';
+import SectionStayMaybe from './SectionStayMaybe';
 
 const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
 
@@ -377,6 +378,7 @@ export class ListingPageComponent extends Component {
       </NamedLink>
     );
 
+    const nightStayOptions = findOptionsForSelectFilter('nightStay', filterConfig);
     const viewOptions = findOptionsForSelectFilter('view', filterConfig);
     const amenityOptions = findOptionsForSelectFilter('amenities', filterConfig);
     const categoryOptions = findOptionsForSelectFilter('category', filterConfig);
@@ -436,9 +438,10 @@ export class ListingPageComponent extends Component {
                     showContactUser={showContactUser}
                     onContactUser={this.onContactUser}
                   />
-                 <SectionViewMaybe options={viewOptions} publicData={publicData}/>
+                  <SectionViewMaybe options={viewOptions} publicData={publicData} />
                   <SectionDescriptionMaybe description={description} />
                   <SectionFeaturesMaybe options={amenityOptions} publicData={publicData} />
+                  <SectionStayMaybe options={nightStayOptions} publicData={publicData}/>
                   <SectionRulesMaybe publicData={publicData} />
                   <SectionMapMaybe
                     geolocation={geolocation}
