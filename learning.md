@@ -58,3 +58,6 @@ To add a view info to the ListingPage component we need to modify `ListingPage.j
 6. Next we update the booking data, i.e. if user has booking data and selected other values and update the transaction line items. These line items are shown inside the `bookingInfoMaybe` component under the form fields. 
 7. Inside BookingPanel on handleChange check if new values is available to formValues field. if yes then set bookingData with this key.
 8. Add new line item for the newly populated item on backend. When we want to add a new line item for new pricing item, we'll need to update the pricing logic in the lineItems.js file.
+
+## how to use protected data in an email notification
+
