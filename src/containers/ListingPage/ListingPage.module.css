@@ -293,6 +293,15 @@
     margin-bottom: 31px;
   }
 }
+
+.addToWishList {
+  margin-left: 1rem;
+  color: var(--marketplaceColorLight);
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+}
 .desktopPriceContainer {
   display: none;
 

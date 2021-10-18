@@ -15,6 +15,8 @@ const SectionHeading = props => {
     hostLink,
     showContactUser,
     onContactUser,
+    handleWishList,
+    isOwnListing,
   } = props;
 
   const unitType = config.bookingUnitType;
@@ -56,6 +58,11 @@ const SectionHeading = props => {
           ) : null}
         </div>
       </div>
+      {!isOwnListing && (
+        <div className={css.addToWishList} onClick={handleWishList}>
+          <FormattedMessage id="ListingPage.wishList" />
+        </div>
+      )}
     </div>
   );
 };

@@ -14,7 +14,6 @@ const SectionStayMaybe = props => {
   
   const optionConfig = options.find(o => o.key === selectedOption);
   const optionLabel = optionConfig ? optionConfig.label : null;
-  console.log(' ===>', options[1].key, selectedOption);
 
   return (
     <div className={css.sectionFeatures}>

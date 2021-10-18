@@ -8,7 +8,7 @@ import { REVIEW_TYPE_OF_PROVIDER, REVIEW_TYPE_OF_CUSTOMER, propTypes } from '../
 import { ensureCurrentUser, ensureUser } from '../../util/data';
 import { withViewport } from '../../util/contextHelpers';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
-import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
+import { getListingsById, getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import {
   Page,
   LayoutSideNavigation,
@@ -22,11 +22,14 @@ import {
   ListingCard,
   Reviews,
   ButtonTabNavHorizontal,
+  ManageListingCard,
 } from '../../components';
 import { TopbarContainer, NotFoundPage } from '../../containers';
 import config from '../../config';
 
 import css from './ProfilePage.module.css';
+import { getAllListingsById } from './ProfilePage.duck';
+import { setActiveListing } from '.././SearchPage/SearchPage.duck';
 
 const MAX_MOBILE_SCREEN_WIDTH = 768;
 
@@ -37,10 +40,17 @@ export class ProfilePageComponent extends Component {
     this.state = {
       // keep track of which reviews tab to show in desktop viewport
       showReviewsType: REVIEW_TYPE_OF_PROVIDER,
+      listingMenuOpen: null,
+      savedListings: null,
     };
 
     this.showOfProviderReviews = this.showOfProviderReviews.bind(this);
     this.showOfCustomerReviews = this.showOfCustomerReviews.bind(this);
+    this.onToggleMenu = this.onToggleMenu.bind(this);
+  }
+
+  onToggleMenu(listing) {
+    this.setState({ listingMenuOpen: listing });
   }
 
   showOfProviderReviews() {
@@ -55,6 +65,21 @@ export class ProfilePageComponent extends Component {
     });
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    const { currentUser, getSavedListings } = this.props;
+    console.log("runnig");
+    if (this.props.currentUser !== prevProps.currentUser || this.props !== prevProps) {
+      const ids =
+        currentUser && currentUser.attributes.profile.privateData.wishList.map(l => JSON.parse(l));
+      getSavedListings(ids).then(res => {
+        this.setState(prevState => ({
+          ...prevState,
+          savedListings: res,
+        }));
+      });
+    }
+  }
+
   render() {
     const {
       scrollingDisabled,
@@ -67,6 +92,7 @@ export class ProfilePageComponent extends Component {
       queryReviewsError,
       viewport,
       intl,
+      onActivateListing,
     } = this.props;
     const ensuredCurrentUser = ensureCurrentUser(currentUser);
     const profileUser = ensureUser(user);
@@ -77,6 +103,15 @@ export class ProfilePageComponent extends Component {
     const hasBio = !!bio;
     const hasListings = listings.length > 0;
     const isMobileLayout = viewport.width < MAX_MOBILE_SCREEN_WIDTH;
+
+    const panelMediumWidth = 30;
+    const panelLargeWidth = 5;
+    const cardRenderSizes = [
+      '(max-width: 767px) 100vw',
+      `(max-width: 1023px) ${panelMediumWidth}vw`,
+      `(max-width: 1920px) ${panelLargeWidth / 2}vw`,
+      `${panelLargeWidth / 3}vw`,
+    ].join(', ');
 
     const editLinkMobile = isCurrentUser ? (
       <NamedLink className={css.editLinkMobile} name="ProfileSettingsPage">
@@ -201,6 +236,22 @@ export class ProfilePageComponent extends Component {
             </ul>
           </div>
         ) : null}
+        <div>
+          <h2>
+            <FormattedMessage id="ProfilePage.wishList" />
+          </h2>
+          <ul className={css.listings}>
+            {this.state.savedListings ? (
+              this.state.savedListings.map(l => (
+                <li className={css.listing} key={l.id.uuid}>
+                  <ListingCard listing={l} />
+                </li>
+              ))
+            ) : (
+              <div>loading...</div>
+            )}
+          </ul>
+        </div>
         {isMobileLayout ? mobileReviews : desktopReviews}
       </div>
     );
@@ -298,6 +349,8 @@ const mapStateToProps = state => {
   const userMatches = getMarketplaceEntities(state, [{ type: 'user', id: userId }]);
   const user = userMatches.length === 1 ? userMatches[0] : null;
   const listings = getMarketplaceEntities(state, userListingRefs);
+  
+
   return {
     scrollingDisabled: isScrollingDisabled(state),
     currentUser,
@@ -310,8 +363,16 @@ const mapStateToProps = state => {
   };
 };
 
+const mapDispatchToProps = dispatch => ({
+  getSavedListings: ids => dispatch(getAllListingsById(ids)),
+  onActivateListing: listingId => dispatch(setActiveListing(listingId)),
+});
+
 const ProfilePage = compose(
-  connect(mapStateToProps),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  ),
   withViewport,
   injectIntl
 )(ProfilePageComponent);

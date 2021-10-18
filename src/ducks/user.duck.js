@@ -39,6 +39,10 @@ export const SEND_VERIFICATION_EMAIL_REQUEST = 'app/user/SEND_VERIFICATION_EMAIL
 export const SEND_VERIFICATION_EMAIL_SUCCESS = 'app/user/SEND_VERIFICATION_EMAIL_SUCCESS';
 export const SEND_VERIFICATION_EMAIL_ERROR = 'app/user/SEND_VERIFICATION_EMAIL_ERROR';
 
+export const UPDATE_USER_PROFILE_REQUEST = 'app/user/UPDATE_USER_PROFILE_REQUEST';
+export const UPDATE_USER_PROFILE_SUCCESS = 'app/user/UPDATE_USER_PROFILE_SUCCESS';
+export const UPDATE_USER_PROFILE_ERROR = 'app/user/UPDATE_USER_PROFILE_ERROR';
+
 // ================ Reducer ================ //
 
 const mergeCurrentUser = (oldCurrentUser, newCurrentUser) => {
@@ -66,6 +70,8 @@ const initialState = {
   currentUserHasOrdersError: null,
   sendVerificationEmailInProgress: false,
   sendVerificationEmailError: null,
+  userUpdateInProgress: false,
+  userUpdateError: false,
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -131,6 +137,22 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         sendVerificationEmailInProgress: false,
         sendVerificationEmailError: payload,
+      };
+    case UPDATE_USER_PROFILE_REQUEST:
+      return {
+        ...state,
+        userUpdateInProgress: true,
+      };
+    case UPDATE_USER_PROFILE_SUCCESS:
+      return {
+        ...state,
+        userUpdateInProgress: false,
+      };
+    case UPDATE_USER_PROFILE_ERROR:
+      return {
+        ...state,
+        userUpdateInProgress: false,
+        userUpdateError: true,
       };
 
     default:
@@ -228,6 +250,17 @@ export const sendVerificationEmailError = e => ({
   type: SEND_VERIFICATION_EMAIL_ERROR,
   error: true,
   payload: e,
+});
+
+export const updateUserProfileRequest = () => ({
+  type: UPDATE_USER_PROFILE_REQUEST,
+});
+
+export const updateUserProfileSuccess = () => ({
+  type: UPDATE_USER_PROFILE_SUCCESS,
+});
+export const updateUserProfileFailure = () => ({
+  type: UPDATE_USER_PROFILE_ERROR,
 });
 
 // ================ Thunks ================ //
@@ -382,4 +415,29 @@ export const sendVerificationEmail = () => (dispatch, getState, sdk) => {
     .sendVerificationEmail()
     .then(() => dispatch(sendVerificationEmailSuccess()))
     .catch(e => dispatch(sendVerificationEmailError(storableError(e))));
+};
+
+export const addToWishListThunk = (listingId, currentUser) => (dispatch, getState, sdk) => {
+  dispatch(updateUserProfileRequest());
+  const userProfile = currentUser.attributes.profile;
+  const id = JSON.stringify({ ...listingId });
+
+  const wishList = userProfile.privateData['wishList'];
+  !wishList.includes(id) ? wishList.push(id) : null;
+
+  return sdk.currentUser
+    .updateProfile(
+      {
+        privateData: {
+          ...userProfile.privateData,
+          wishList: wishList,
+        },
+      },
+      {
+        expand: true,
+        include: ['profileImage', 'stripeAccount'],
+      }
+    )
+    .then(response => dispatch(updateUserProfileSuccess()))
+    .catch(e => dispatch(UPDATE_USER_PROFILE_ERROR));
 };

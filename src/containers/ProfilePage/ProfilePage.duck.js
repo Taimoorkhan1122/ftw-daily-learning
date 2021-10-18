@@ -187,3 +187,15 @@ export const loadData = params => (dispatch, getState, sdk) => {
     dispatch(queryUserReviews(userId)),
   ]);
 };
+
+export const getAllListingsById = ids => (dispatch, getState, sdk) => {
+  const uuid = ids.map(l => l.uuid);
+  let data;
+  return sdk.listings
+    .query({
+      ids: uuid,
+      pub_: true,
+    })
+    .then(res => denormalisedResponseEntities(res))
+    .catch(e => console.log(e));
+};

@@ -54,6 +54,7 @@ import SectionMapMaybe from './SectionMapMaybe';
 import SectionViewMaybe from './SectionViewMaybe';
 import css from './ListingPage.module.css';
 import SectionStayMaybe from './SectionStayMaybe';
+import { addToWishList, addToWishListThunk, fetchCurrentUser } from '../../ducks/user.duck';
 
 const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
 
@@ -198,6 +199,7 @@ export class ListingPageComponent extends Component {
       lineItems,
       fetchLineItemsInProgress,
       fetchLineItemsError,
+      addToWishList,
     } = this.props;
 
     const listingId = new UUID(rawParams.id);
@@ -318,6 +320,14 @@ export class ListingPageComponent extends Component {
         imageCarouselOpen: true,
       });
     };
+
+    // handle add to wish list item
+    const handleWishList = () => {
+      //  currentUser.attributes.profile.privateData = {wishList: ["hello"]};
+      // currentUser && (wishList = );
+      addToWishList(listingId, currentUser);
+    };
+
     const authorAvailable = currentListing && currentListing.author;
     const userAndListingAuthorAvailable = !!(currentUser && authorAvailable);
     const isOwnListing =
@@ -437,11 +447,13 @@ export class ListingPageComponent extends Component {
                     hostLink={hostLink}
                     showContactUser={showContactUser}
                     onContactUser={this.onContactUser}
+                    handleWishList={handleWishList}
+                    isOwnListing={isOwnListing}
                   />
                   <SectionViewMaybe options={viewOptions} publicData={publicData} />
                   <SectionDescriptionMaybe description={description} />
                   <SectionFeaturesMaybe options={amenityOptions} publicData={publicData} />
-                  <SectionStayMaybe options={nightStayOptions} publicData={publicData}/>
+                  <SectionStayMaybe options={nightStayOptions} publicData={publicData} />
                   <SectionRulesMaybe publicData={publicData} />
                   <SectionMapMaybe
                     geolocation={geolocation}
@@ -608,6 +620,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(fetchTransactionLineItems(bookingData, listingId, isOwnListing)),
   onSendEnquiry: (listingId, message) => dispatch(sendEnquiry(listingId, message)),
   onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
+  addToWishList: (listingId, currentUser) => dispatch(addToWishListThunk(listingId, currentUser))
+  
 });
 
 // Note: it is important that the withRouter HOC is **outside** the
