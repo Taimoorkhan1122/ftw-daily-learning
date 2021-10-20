@@ -67,11 +67,10 @@ export class ProfilePageComponent extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     const { currentUser, getSavedListings } = this.props;
-    console.log("runnig");
     if (this.props.currentUser !== prevProps.currentUser || this.props !== prevProps) {
       const ids =
         currentUser && currentUser.attributes.profile.privateData.wishList.map(l => JSON.parse(l));
-      getSavedListings(ids).then(res => {
+      ids && getSavedListings(ids).then(res => {
         this.setState(prevState => ({
           ...prevState,
           savedListings: res,
@@ -230,6 +229,8 @@ export class ProfilePageComponent extends Component {
             <ul className={css.listings}>
               {listings.map(l => (
                 <li className={css.listing} key={l.id.uuid}>
+                  {/* {console.log('ownlisting => ', l)} */}
+
                   <ListingCard listing={l} />
                 </li>
               ))}
@@ -244,6 +245,7 @@ export class ProfilePageComponent extends Component {
             {this.state.savedListings ? (
               this.state.savedListings.map(l => (
                 <li className={css.listing} key={l.id.uuid}>
+                  {console.log('wishilist => ', l)}
                   <ListingCard listing={l} />
                 </li>
               ))

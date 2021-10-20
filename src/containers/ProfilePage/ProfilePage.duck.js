@@ -194,7 +194,8 @@ export const getAllListingsById = ids => (dispatch, getState, sdk) => {
   return sdk.listings
     .query({
       ids: uuid,
-      pub_: true,
+      include: ['images'],
+      'fields.image': ['variants.landscape-crop', 'variants.landscape-crop2x'],
     })
     .then(res => denormalisedResponseEntities(res))
     .catch(e => console.log(e));
