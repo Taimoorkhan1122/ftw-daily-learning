@@ -6,6 +6,7 @@ import * as log from '../util/log';
 import { authInfo } from './Auth.duck';
 import { stripeAccountCreateSuccess } from './stripeConnectAccount.duck';
 import { util as sdkUtil } from '../util/sdkLoader';
+import { getMarketplaceEntities } from './marketplaceData.duck';
 
 // ================ Action types ================ //
 
@@ -256,9 +257,7 @@ export const updateUserProfileRequest = () => ({
   type: UPDATE_USER_PROFILE_REQUEST,
 });
 
-export const updateUserProfileSuccess = () => ({
-  type: UPDATE_USER_PROFILE_SUCCESS,
-});
+export const updateUserProfileSuccess = response => ({ type: UPDATE_USER_PROFILE_SUCCESS });
 export const updateUserProfileFailure = () => ({
   type: UPDATE_USER_PROFILE_ERROR,
 });
@@ -419,10 +418,10 @@ export const sendVerificationEmail = () => (dispatch, getState, sdk) => {
 
 export const addToWishListThunk = (listingId, currentUser) => (dispatch, getState, sdk) => {
   dispatch(updateUserProfileRequest());
-  const userProfile = currentUser.attributes.profile;
+  const userProfile = currentUser?.attributes.profile;
   const id = JSON.stringify({ ...listingId });
 
-  const wishList = userProfile.privateData['wishList'];
+  const wishList = userProfile?.privateData['wishList'];
   !wishList.includes(id) ? wishList.push(id) : null;
 
   return sdk.currentUser
@@ -430,7 +429,7 @@ export const addToWishListThunk = (listingId, currentUser) => (dispatch, getStat
       {
         privateData: {
           ...userProfile.privateData,
-          wishList: wishList,
+          wishList: [...wishList],
         },
       },
       {
@@ -438,6 +437,7 @@ export const addToWishListThunk = (listingId, currentUser) => (dispatch, getStat
         include: ['profileImage', 'stripeAccount'],
       }
     )
-    .then(response => dispatch(updateUserProfileSuccess()))
+    .then(response => dispatch(updateUserProfileSuccess(response)))
     .catch(e => dispatch(UPDATE_USER_PROFILE_ERROR));
 };
+// console.log('Response from sdk => ', denormalisedResponseEntities(response)[0].attributes.profile);

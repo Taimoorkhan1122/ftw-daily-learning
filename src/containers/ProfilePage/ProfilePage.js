@@ -245,7 +245,6 @@ export class ProfilePageComponent extends Component {
             {this.state.savedListings ? (
               this.state.savedListings.map(l => (
                 <li className={css.listing} key={l.id.uuid}>
-                  {console.log('wishilist => ', l)}
                   <ListingCard listing={l} />
                 </li>
               ))

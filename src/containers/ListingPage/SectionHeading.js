@@ -5,6 +5,7 @@ import { LINE_ITEM_NIGHT, LINE_ITEM_DAY } from '../../util/types';
 import config from '../../config';
 
 import css from './ListingPage.module.css';
+import { useHistory } from 'react-router';
 
 const SectionHeading = props => {
   const {
@@ -17,11 +18,14 @@ const SectionHeading = props => {
     onContactUser,
     handleWishList,
     isOwnListing,
+    isAuthenticated,
   } = props;
 
   const unitType = config.bookingUnitType;
   const isNightly = unitType === LINE_ITEM_NIGHT;
   const isDaily = unitType === LINE_ITEM_DAY;
+  const history = useHistory();
+  // console.log(history);
 
   const unitTranslationKey = isNightly
     ? 'ListingPage.perNight'
@@ -59,7 +63,14 @@ const SectionHeading = props => {
         </div>
       </div>
       {!isOwnListing && (
-        <div className={css.addToWishList} onClick={handleWishList}>
+        <div
+          className={css.addToWishList}
+          onClick={() =>
+            isAuthenticated
+              ? handleWishList
+              : history.push('/signup', { from: history.location })
+          }
+        >
           <FormattedMessage id="ListingPage.wishList" />
         </div>
       )}

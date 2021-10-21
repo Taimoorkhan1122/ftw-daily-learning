@@ -201,7 +201,6 @@ export class ListingPageComponent extends Component {
       fetchLineItemsError,
       addToWishList,
     } = this.props;
-
     const listingId = new UUID(rawParams.id);
     const isPendingApprovalVariant = rawParams.variant === LISTING_PAGE_PENDING_APPROVAL_VARIANT;
     const isDraftVariant = rawParams.variant === LISTING_PAGE_DRAFT_VARIANT;
@@ -449,6 +448,7 @@ export class ListingPageComponent extends Component {
                     onContactUser={this.onContactUser}
                     handleWishList={handleWishList}
                     isOwnListing={isOwnListing}
+                    isAuthenticated={isAuthenticated}
                   />
                   <SectionViewMaybe options={viewOptions} publicData={publicData} />
                   <SectionDescriptionMaybe description={description} />
