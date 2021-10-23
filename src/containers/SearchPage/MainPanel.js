@@ -174,6 +174,7 @@ class MainPanel extends Component {
     const secondaryFilters = filterConfig.filter(f => f.group !== 'primary');
     const hasSecondaryFilters = !!(secondaryFilters && secondaryFilters.length > 0);
 
+    console.log(secondaryFilters);
     // Selected aka active filters
     const selectedFilters = validFilterParams(urlQueryParams, filterConfig);
     const selectedFiltersCount = Object.keys(selectedFilters).length;

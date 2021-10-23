@@ -34,135 +34,155 @@
  */
 
 export const filters = [
-         {
-           id: 'dates',
-           label: 'Dates',
-           type: 'BookingDateRangeFilter',
-           group: 'primary',
-           // Note: BookingDateRangeFilter is fixed filter,
-           // you can't change "queryParamNames: ['dates'],"
-           queryParamNames: ['dates'],
-           config: {},
-         },
-         {
-           id: 'price',
-           label: 'Price',
-           type: 'PriceFilter',
-           group: 'primary',
-           // Note: PriceFilter is fixed filter,
-           // you can't change "queryParamNames: ['price'],"
-           queryParamNames: ['price'],
-           // Price filter configuration
-           // Note: unlike most prices this is not handled in subunits
-           config: {
-             min: 0,
-             max: 1000,
-             step: 5,
-           },
-         },
-         {
-           id: 'keyword',
-           label: 'Keyword',
-           type: 'KeywordFilter',
-           group: 'primary',
-           // Note: KeywordFilter is fixed filter,
-           // you can't change "queryParamNames: ['keywords'],"
-           queryParamNames: ['keywords'],
-           // NOTE: If you are ordering search results by distance
-           // the keyword search can't be used at the same time.
-           // You can turn on/off ordering by distance from config.js file.
-           config: {},
-         },
-         {
-           id: 'category',
-           label: 'Category',
-           type: 'SelectSingleFilter',
-           group: 'secondary',
-           queryParamNames: ['pub_category'],
-           config: {
-             // "key" is the option you see in Flex Console.
-             // "label" is set here for the UI only.
-             // Note: label is not added through the translation files
-             // to make filter customizations a bit easier.
-             options: [
-               { key: 'smoke', label: 'Smoke' },
-               { key: 'electric', label: 'Electric' },
-               { key: 'wood', label: 'Wood' },
-               { key: 'other', label: 'Other' },
-             ],
-           },
-         },
-         {
-           id: 'amenities',
-           label: 'Amenities',
-           type: 'SelectMultipleFilter',
-           group: 'secondary',
-           queryParamNames: ['pub_amenities'],
-           config: {
-             // Optional modes: 'has_all', 'has_any'
-             // https://www.sharetribe.com/api-reference/marketplace.html#extended-data-filtering
-             searchMode: 'has_all',
+  {
+    id: 'dates',
+    label: 'Dates',
+    type: 'BookingDateRangeFilter',
+    group: 'primary',
+    // Note: BookingDateRangeFilter is fixed filter,
+    // you can't change "queryParamNames: ['dates'],"
+    queryParamNames: ['dates'],
+    config: {},
+  },
+  {
+    id: 'price',
+    label: 'Price',
+    type: 'PriceFilter',
+    group: 'primary',
+    // Note: PriceFilter is fixed filter,
+    // you can't change "queryParamNames: ['price'],"
+    queryParamNames: ['price'],
+    // Price filter configuration
+    // Note: unlike most prices this is not handled in subunits
+    config: {
+      min: 0,
+      max: 1000,
+      step: 5,
+    },
+  },
+  {
+    id: 'keyword',
+    label: 'Keyword',
+    type: 'KeywordFilter',
+    group: 'primary',
+    // Note: KeywordFilter is fixed filter,
+    // you can't change "queryParamNames: ['keywords'],"
+    queryParamNames: ['keywords'],
+    // NOTE: If you are ordering search results by distance
+    // the keyword search can't be used at the same time.
+    // You can turn on/off ordering by distance from config.js file.
+    config: {},
+  },
+  {
+    id: 'category',
+    label: 'Category',
+    type: 'SelectSingleFilter',
+    group: 'secondary',
+    queryParamNames: ['pub_category'],
+    config: {
+      // "key" is the option you see in Flex Console.
+      // "label" is set here for the UI only.
+      // Note: label is not added through the translation files
+      // to make filter customizations a bit easier.
+      options: [
+        { key: 'smoke', label: 'Smoke' },
+        { key: 'electric', label: 'Electric' },
+        { key: 'wood', label: 'Wood' },
+        { key: 'other', label: 'Other' },
+      ],
+    },
+  },
+  {
+    id: 'amenities',
+    label: 'Amenities',
+    type: 'SelectMultipleFilter',
+    group: 'secondary',
+    queryParamNames: ['pub_amenities'],
+    config: {
+      // Optional modes: 'has_all', 'has_any'
+      // https://www.sharetribe.com/api-reference/marketplace.html#extended-data-filtering
+      searchMode: 'has_all',
 
-             // "key" is the option you see in Flex Console.
-             // "label" is set here for this web app's UI only.
-             // Note: label is not added through the translation files
-             // to make filter customizations a bit easier.
-             options: [
-               {
-                 key: 'terrace',
-                 label: 'Terrace',
-               },
-               {
-                 key: 'bathroom',
-                 label: 'Bathroom',
-               },
-               {
-                 key: 'swimming_pool',
-                 label: 'Swimming pool',
-               },
-               {
-                 key: 'jacuzzi',
-                 label: 'Jacuzzi',
-               },
-               {
-                 key: 'barbeque',
-                 label: 'Barbeque',
-               },
-               {
-                 key: 'fireplace',
-                 label: 'Fireplace',
-               },
-             ],
-           },
-         },
-         {
-           id: 'view',
-           label: 'View',
-           type: 'SelectSingleFilter',
-           group: 'secondary',
-           queryParamNames: ['pub_view'],
-           config: {
-             schemaType: 'enum',
-             options: [
-               { key: 'sea', label: 'Sea view' },
-               { key: 'lake', label: 'Lake view' },
-               { key: 'forest', label: 'Forest view' },
-               { key: 'garden', label: 'Garden view' },
-             ],
-           },
-         },
-         {
-           id: 'nightStay',
-           label: 'Night Stay',
-           type: 'SelectSingleFilter',
-           group: 'secondary',
-           queryParamNames: ['pub_nightStay'],
-           config: {
-             schemaType: 'boolean',
-             options: [{ key: true, label: 'Yes' }, { key: false, label: 'No' }],
-           },
-         },
-       ];
+      // "key" is the option you see in Flex Console.
+      // "label" is set here for this web app's UI only.
+      // Note: label is not added through the translation files
+      // to make filter customizations a bit easier.
+      options: [
+        {
+          key: 'terrace',
+          label: 'Terrace',
+        },
+        {
+          key: 'bathroom',
+          label: 'Bathroom',
+        },
+        {
+          key: 'swimming_pool',
+          label: 'Swimming pool',
+        },
+        {
+          key: 'jacuzzi',
+          label: 'Jacuzzi',
+        },
+        {
+          key: 'barbeque',
+          label: 'Barbeque',
+        },
+        {
+          key: 'fireplace',
+          label: 'Fireplace',
+        },
+      ],
+    },
+  },
+  {
+    id: 'view',
+    label: 'View',
+    type: 'SelectSingleFilter',
+    group: 'secondary',
+    queryParamNames: ['pub_view'],
+    config: {
+      schemaType: 'enum',
+      options: [
+        { key: 'sea', label: 'Sea view' },
+        { key: 'lake', label: 'Lake view' },
+        { key: 'forest', label: 'Forest view' },
+        { key: 'garden', label: 'Garden view' },
+      ],
+    },
+  },
+  {
+    id: 'nightStay',
+    label: 'Night Stay',
+    type: 'SelectSingleFilter',
+    group: 'secondary',
+    queryParamNames: ['pub_nightStay'],
+    config: {
+      schemaType: 'boolean',
+      options: [
+        { key: true, label: 'Yes' },
+        { key: false, label: 'No' },
+      ],
+    },
+  },
+  // {
+  //   id: 'aveRating',
+  //   label: 'sort by rating',
+  //   type: 'selectSingleFilter',
+  //   group: 'secondary',
+  //   queryParamNames: ['meta_aveRating'],
+  //   config: {
+  //     schemaType: 'long',
+  //     optoins: [
+  //       { key: 5, label: '5 Stars' },
+  //       { key: 4, label: '4 Stars' },
+  //       { key: 3, label: '3 Stars' },
+  //       { key: 2, label: '2 Stars' },
+  //       { key: 1, label: '1 Stars' },
+  //     ],
+  //   },
+  // },
+];
 
 export const sortConfig = {
   // Enable/disable the sorting control in the SearchPage
@@ -184,6 +204,7 @@ export const sortConfig = {
     { key: '-createdAt', label: 'Oldest' },
     { key: '-price', label: 'Lowest price' },
     { key: 'price', label: 'Highest price' },
+    { key: 'meta_average', label: 'Highest rating' },
 
     // The relevance is only used for keyword search, but the
     // parameter isn't sent to the Marketplace API. The key is purely

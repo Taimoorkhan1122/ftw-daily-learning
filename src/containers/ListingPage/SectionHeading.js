@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FormattedMessage } from '../../util/reactIntl';
 import { InlineTextButton } from '../../components';
 import { LINE_ITEM_NIGHT, LINE_ITEM_DAY } from '../../util/types';
@@ -16,10 +16,28 @@ const SectionHeading = props => {
     hostLink,
     showContactUser,
     onContactUser,
+    wishList,
     handleWishList,
+    handleRemoveWishList,
     isOwnListing,
     isAuthenticated,
+    listingId,
   } = props;
+
+  const [showWishList, setShowWishList] = useState(false);
+  useEffect(() => {
+    const isAddedToWishList = wishList?.includes(JSON.stringify(listingId)) || true;
+    setShowWishList(isAddedToWishList);
+  }, []);
+
+  const handleAddToWishList = () => {
+    handleWishList();
+    setShowWishList(false);
+  };
+  const handleRemoveToWishList = () => {
+    handleRemoveWishList();
+    setShowWishList(true);
+  };
 
   const unitType = config.bookingUnitType;
   const isNightly = unitType === LINE_ITEM_NIGHT;
@@ -62,18 +80,23 @@ const SectionHeading = props => {
           ) : null}
         </div>
       </div>
-      {!isOwnListing && (
-        <div
-          className={css.addToWishList}
-          onClick={() =>
-            isAuthenticated
-              ? handleWishList
-              : history.push('/signup', { from: history.location })
-          }
-        >
-          <FormattedMessage id="ListingPage.wishList" />
-        </div>
-      )}
+      {!isOwnListing &&
+        (showWishList ? (
+          <div
+            className={css.addToWishList}
+            onClick={() =>
+              isAuthenticated
+                ? handleAddToWishList()
+                : history.push('/signup', { from: history.location })
+            }
+          >
+            <FormattedMessage id="ListingPage.wishList" />
+          </div>
+        ) : (
+          <div className={css.addToWishList} onClick={() => handleRemoveToWishList()}>
+            <FormattedMessage id="ListingPage.removeFromWishList" />
+          </div>
+        ))}
     </div>
   );
 };

@@ -69,7 +69,7 @@ export class ProfilePageComponent extends Component {
     const { currentUser, getSavedListings } = this.props;
     if (this.props.currentUser !== prevProps.currentUser || this.props !== prevProps) {
       const ids =
-        currentUser && currentUser.attributes.profile.privateData.wishList.map(l => JSON.parse(l));
+        currentUser && currentUser.attributes.profile.privateData.wishList?.map(l => JSON.parse(l)) || [];
       ids && getSavedListings(ids).then(res => {
         this.setState(prevState => ({
           ...prevState,
@@ -237,22 +237,26 @@ export class ProfilePageComponent extends Component {
             </ul>
           </div>
         ) : null}
-        <div>
-          <h2>
-            <FormattedMessage id="ProfilePage.wishList" />
-          </h2>
-          <ul className={css.listings}>
-            {this.state.savedListings ? (
-              this.state.savedListings.map(l => (
-                <li className={css.listing} key={l.id.uuid}>
-                  <ListingCard listing={l} />
-                </li>
-              ))
-            ) : (
-              <div>loading...</div>
-            )}
-          </ul>
-        </div>
+        {this.state.savedListings &&
+          this.state.savedListings.length > 0 && (
+            <div>
+              <h2>
+                <FormattedMessage id="ProfilePage.wishList" />
+              </h2>
+              <ul className={css.listings}>
+                {this.state.savedListings ? (
+                  this.state.savedListings.map(l => (
+                    <li className={css.listing} key={l.id.uuid}>
+                      <ListingCard listing={l} />
+                    </li>
+                  ))
+                ) : (
+                  <div>loading...</div>
+                )}
+              </ul>
+            </div>
+          )}
+
         {isMobileLayout ? mobileReviews : desktopReviews}
       </div>
     );

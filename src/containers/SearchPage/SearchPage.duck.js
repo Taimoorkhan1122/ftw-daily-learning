@@ -156,6 +156,15 @@ export const searchListings = searchParams => (dispatch, getState, sdk) => {
       : {};
   };
 
+  const test = () =>
+    sdk.listings
+      .query({
+        meta_aveRating: 4,
+      })
+      .then(res => console.log('test response => ', JSON.stringify(res.data.data)))
+      .catch(e => console.log(e));
+  test();
+
   const { perPage, price, dates, ...rest } = searchParams;
   const priceMaybe = priceSearchParams(price);
   const datesMaybe = datesSearchParams(dates);

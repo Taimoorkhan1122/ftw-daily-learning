@@ -421,8 +421,8 @@ export const addToWishListThunk = (listingId, currentUser) => (dispatch, getStat
   const userProfile = currentUser?.attributes.profile;
   const id = JSON.stringify({ ...listingId });
 
-  const wishList = userProfile?.privateData['wishList'];
-  !wishList.includes(id) ? wishList.push(id) : null;
+  const wishList = userProfile?.privateData['wishList'] || [];
+   !wishList.includes(id) ? wishList.push(id) : null;
 
   return sdk.currentUser
     .updateProfile(
@@ -440,4 +440,26 @@ export const addToWishListThunk = (listingId, currentUser) => (dispatch, getStat
     .then(response => dispatch(updateUserProfileSuccess(response)))
     .catch(e => dispatch(UPDATE_USER_PROFILE_ERROR));
 };
+
+export const removeFromWishList = (listingId, currentUser) => (dispatch, getState, sdk) => {
+  // dispatch(updateUserProfileRequest());
+  const userProfile = currentUser?.attributes?.profile;
+  const id = JSON.stringify({ ...listingId });
+
+  const wishList = userProfile && userProfile.privateData?.wishList || [];
+  wishList.filter(item => item !== id)
+
+  return sdk.currentUser
+    .updateProfile(
+      {
+        privateData: {
+          wishList: [...wishList],
+        },
+      },
+      { expand: true, include: ['profileImage', 'stripeAccount'] }
+    )
+    .then(response => console.log(response))
+    .catch(e => console.log('error removin wihslist => ', e));
+};
+
 // console.log('Response from sdk => ', denormalisedResponseEntities(response)[0].attributes.profile);

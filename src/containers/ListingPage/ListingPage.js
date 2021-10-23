@@ -54,7 +54,12 @@ import SectionMapMaybe from './SectionMapMaybe';
 import SectionViewMaybe from './SectionViewMaybe';
 import css from './ListingPage.module.css';
 import SectionStayMaybe from './SectionStayMaybe';
-import { addToWishList, addToWishListThunk, fetchCurrentUser } from '../../ducks/user.duck';
+import {
+  addToWishList,
+  addToWishListThunk,
+  removeFromWishList,
+  fetchCurrentUser,
+} from '../../ducks/user.duck';
 
 const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
 
@@ -200,6 +205,7 @@ export class ListingPageComponent extends Component {
       fetchLineItemsInProgress,
       fetchLineItemsError,
       addToWishList,
+      handleRemoveWishList,
     } = this.props;
     const listingId = new UUID(rawParams.id);
     const isPendingApprovalVariant = rawParams.variant === LISTING_PAGE_PENDING_APPROVAL_VARIANT;
@@ -326,7 +332,7 @@ export class ListingPageComponent extends Component {
       // currentUser && (wishList = );
       addToWishList(listingId, currentUser);
     };
-
+    const {wishList} = currentUser && currentUser?.attributes?.profile?.privateData || [];
     const authorAvailable = currentListing && currentListing.author;
     const userAndListingAuthorAvailable = !!(currentUser && authorAvailable);
     const isOwnListing =
@@ -446,9 +452,12 @@ export class ListingPageComponent extends Component {
                     hostLink={hostLink}
                     showContactUser={showContactUser}
                     onContactUser={this.onContactUser}
+                    wishList={wishList}
                     handleWishList={handleWishList}
+                    handleRemoveWishList={handleRemoveWishList}
                     isOwnListing={isOwnListing}
                     isAuthenticated={isAuthenticated}
+                    listingId={currentListing.id}
                   />
                   <SectionViewMaybe options={viewOptions} publicData={publicData} />
                   <SectionDescriptionMaybe description={description} />
@@ -517,6 +526,7 @@ ListingPageComponent.defaultProps = {
   filterConfig: config.custom.filters,
   lineItems: null,
   fetchLineItemsError: null,
+
 };
 
 ListingPageComponent.propTypes = {
@@ -620,8 +630,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(fetchTransactionLineItems(bookingData, listingId, isOwnListing)),
   onSendEnquiry: (listingId, message) => dispatch(sendEnquiry(listingId, message)),
   onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
-  addToWishList: (listingId, currentUser) => dispatch(addToWishListThunk(listingId, currentUser))
-  
+  addToWishList: (listingId, currentUser) => dispatch(addToWishListThunk(listingId, currentUser)),
+  handleRemoveWishList: (listingId, currentUser) => dispatch(removeFromWishList(listingId, currentUser)),
 });
 
 // Note: it is important that the withRouter HOC is **outside** the
